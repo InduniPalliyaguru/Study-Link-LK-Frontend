@@ -1,94 +1,68 @@
-import { useState } from "react"
-import { api } from "./services/api"
-import { tokenStorage } from "./services/tokenStorage"
-
-interface ApiResponse<T> {
-  success: boolean
-  message: string
-  data: T
-}
-
-interface User {
-  id: string
-  name: string
-  email: string
-  role: string
-}
-
-interface LoginData {
-  accessToken: string
-  refreshToken: string
-  user: User
-}
+import { useEffect, useState } from "react"
+import { useAppDispatch, useAppSelector } from "./app/hooks"
+import { clearSession, loadSession, login, logoutUser } from "./features/auth/authSlice"
 
 export default function App() {
+  const dispatch = useAppDispatch()
+  const { user, status, error, initialized } = useAppSelector((state) => state.auth)
+
   const [email, setEmail] = useState("test@mail.lk")
   const [password, setPassword] = useState("password123")
-  const [message, setMessage] = useState("Not logged in")
 
-  const login = async () => {
-    try {
-      const response = await api.post<ApiResponse<LoginData>>("/auth/login", {
-        email,
-        password,
-      })
-      const { accessToken, refreshToken, user } = response.data.data
+  useEffect(() => {
+    dispatch(loadSession())
+  }, [dispatch])
 
-      tokenStorage.setTokens(accessToken, refreshToken)
-      setMessage(`Logged in as ${user.email} (${user.role})`)
-    } catch {
-      setMessage("Login failed. Check the email and password")
-    }
+  useEffect(() => {
+    const onLogout = () => dispatch(clearSession())
+
+    window.addEventListener("auth:logout", onLogout)
+    return () => window.removeEventListener("auth:logout", onLogout)
+  }, [dispatch])
+
+  const field = "w-full rounded-xl border border-line bg-card px-3 py-2 text-ink"
+
+  if (!initialized) {
+    return <div className="min-h-screen bg-bg p-8 text-mute">Loading...</div>
   }
-
-  const loadMe = async () => {
-    try {
-      const response = await api.get<ApiResponse<User>>("/auth/me")
-      setMessage(`/auth/me says: ${response.data.data.email}`)
-    } catch {
-      setMessage("Request failed. You are not logged in")
-    }
-  }
-
-  const logout = () => {
-    tokenStorage.clear()
-    setMessage("Tokens removed")
-  }
-
-  const field =
-    "w-full rounded-xl border border-line bg-card px-3 py-2 text-ink"
-  const button = "rounded-xl border border-line px-4 py-2 font-semibold"
 
   return (
     <div className="min-h-screen bg-bg p-8 font-sans text-ink">
       <div className="mx-auto max-w-md rounded-2xl border border-line bg-card p-6">
-        <h1 className="font-display text-2xl font-bold">Token test</h1>
+        <h1 className="font-display text-2xl font-bold">Redux auth test</h1>
 
-        <input
-          className={`${field} mt-4`}
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          className={`${field} mt-2`}
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
-        <div className="mt-4 flex flex-wrap gap-2">
-          <button onClick={login} className={button}>
-            Login
-          </button>
-          <button onClick={loadMe} className={button}>
-            Call /auth/me
-          </button>
-          <button onClick={logout} className={button}>
-            Remove tokens
-          </button>
-        </div>
-
-        <p className="mt-4 text-mute">{message}</p>
+        {user ? (
+          <div className="mt-4">
+            <p>
+              Logged in as <b>{user.name}</b> ({user.email})
+            </p>
+            <p className="text-mute">Role: {user.role}</p>
+            <button
+              onClick={() => dispatch(logoutUser())}
+              className="mt-4 rounded-xl border border-line px-4 py-2 font-semibold"
+            >
+              Log out
+            </button>
+          </div>
+        ) : (
+          <div className="mt-4">
+            <input className={field} value={email} onChange={(e) => setEmail(e.target.value)} />
+            <input
+              className={`${field} mt-2`}
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            {error && <p className="mt-3 text-bad">{error}</p>}
+            <button
+              onClick={() => dispatch(login({ email, password }))}
+              disabled={status === "loading"}
+              className="mt-4 rounded-xl bg-linear-to-br from-brand-1 to-brand-2 px-4 py-2 font-bold text-white disabled:opacity-60"
+            >
+              {status === "loading" ? "Logging in..." : "Log in"}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )

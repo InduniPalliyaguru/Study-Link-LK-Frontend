@@ -1,4 +1,5 @@
-import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios"
+import axios from "axios"
+import type { AxiosError, InternalAxiosRequestConfig } from "axios"
 import { tokenStorage } from "./tokenStorage"
 
 const baseURL = import.meta.env.VITE_API_BASE_URL
