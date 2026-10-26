@@ -55,3 +55,68 @@ body {
     background 0.4s,
     color 0.4s;
 }
+
+@keyframes drift {
+  to {
+    transform: translate(7vmax, 5vmax) scale(1.15);
+  }
+}
+
+@keyframes float {
+  50% {
+    transform: translateY(-10px) rotate(1.5deg);
+  }
+}
+
+.blob {
+  position: fixed;
+  z-index: -1;
+  width: 50vmax;
+  height: 50vmax;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.32;
+  animation: drift 20s ease-in-out infinite alternate;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+.float-book {
+  position: absolute;
+  bottom: -80px;
+  opacity: 0;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.35));
+  animation: rise linear infinite;
+}
+
+@keyframes rise {
+  0% {
+    transform: translateY(0) rotate(-10deg);
+    opacity: 0;
+  }
+  10%,
+  90% {
+    opacity: 0.55;
+  }
+  100% {
+    transform: translateY(-115vh) rotate(25deg);
+    opacity: 0;
+  }
+}
+
+.grid-dots {
+  background-image: radial-gradient(var(--line) 1.2px, transparent 1.2px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
