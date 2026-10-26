@@ -2,13 +2,16 @@ import { useEffect } from "react"
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "./app/hooks"
 import { clearSession, loadSession } from "./features/auth/authSlice"
+import RequireRole from "./routes/RequireRole"
+import StudentLayout from "./layouts/StudentLayout"
+import AdminLayout from "./layouts/AdminLayout"
+import PagePlaceholder from "./components/PagePlaceholder"
 import Login from "./pages/Login"
-import Home from "./pages/Home"
 import Register from "./pages/Register"
 
 export default function App() {
   const dispatch = useAppDispatch()
-  const { user, initialized } = useAppSelector((state) => state.auth)
+  const initialized = useAppSelector((state) => state.auth.initialized)
 
   useEffect(() => {
     dispatch(loadSession())
@@ -30,10 +33,116 @@ export default function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route
-          path="/"
-          element={user ? <Home /> : <Navigate to="/login" replace />}
-        />
+
+        <Route element={<RequireRole role="USER" />}>
+          <Route element={<StudentLayout />}>
+            <Route
+              path="/"
+              element={
+                <PagePlaceholder
+                  title="Home"
+                  description="Find your next book"
+                />
+              }
+            />
+            <Route
+              path="/browse"
+              element={
+                <PagePlaceholder
+                  title="Browse"
+                  description="Search all books"
+                />
+              }
+            />
+            <Route
+              path="/sell"
+              element={
+                <PagePlaceholder
+                  title="Sell a book"
+                  description="List a book with AI help"
+                />
+              }
+            />
+            <Route
+              path="/my-listings"
+              element={
+                <PagePlaceholder
+                  title="My listings"
+                  description="Books you are selling"
+                />
+              }
+            />
+            <Route
+              path="/requests"
+              element={
+                <PagePlaceholder
+                  title="Requests"
+                  description="Sent and received requests"
+                />
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <PagePlaceholder title="Profile" description="Your details" />
+              }
+            />
+          </Route>
+        </Route>
+
+        <Route element={<RequireRole role="ADMIN" />}>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route
+              index
+              element={
+                <PagePlaceholder
+                  title="Dashboard"
+                  description="Platform overview"
+                />
+              }
+            />
+            <Route
+              path="listings"
+              element={
+                <PagePlaceholder
+                  title="Listings"
+                  description="Review and approve listings"
+                />
+              }
+            />
+            <Route
+              path="requests"
+              element={
+                <PagePlaceholder
+                  title="Requests"
+                  description="Monitor requests"
+                />
+              }
+            />
+            <Route
+              path="users"
+              element={
+                <PagePlaceholder title="Users" description="Manage students" />
+              }
+            />
+            <Route
+              path="subjects"
+              element={
+                <PagePlaceholder
+                  title="Subjects and grades"
+                  description="Manage categories"
+                />
+              }
+            />
+            <Route
+              path="reports"
+              element={
+                <PagePlaceholder title="Reports" description="Handle reports" />
+              }
+            />
+          </Route>
+        </Route>
+
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

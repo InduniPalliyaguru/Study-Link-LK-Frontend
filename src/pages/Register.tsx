@@ -6,6 +6,7 @@ import { clearError, register } from "../features/auth/authSlice"
 import AuthLayout from "../components/AuthLayout"
 import { DISTRICTS, EDUCATION_LEVELS } from "../utils/constants"
 import { inputClass } from "../utils/styles"
+import { homeFor } from "../utils/roles"
 
 export default function Register() {
   const dispatch = useAppDispatch()
@@ -28,7 +29,7 @@ export default function Register() {
   }, [dispatch])
 
   if (user) {
-    return <Navigate to="/" replace />
+    return <Navigate to={homeFor(user.role)} replace />
   }
 
   const update = (field: string, value: string) => {

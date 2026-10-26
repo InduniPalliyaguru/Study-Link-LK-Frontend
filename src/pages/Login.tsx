@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "../app/hooks"
 import { clearError, login } from "../features/auth/authSlice"
 import AuthLayout from "../components/AuthLayout"
 import { inputClass } from "../utils/styles"
+import { homeFor } from "../utils/roles"
 
 export default function Login() {
   const dispatch = useAppDispatch()
@@ -22,7 +23,7 @@ export default function Login() {
   }, [dispatch])
 
   if (user) {
-    return <Navigate to="/" replace />
+    return <Navigate to={homeFor(user.role)} replace />
   }
 
   const handleSubmit = (event: FormEvent) => {
