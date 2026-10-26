@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "./app/hooks"
 import { clearSession, loadSession } from "./features/auth/authSlice"
 import Login from "./pages/Login"
 import Home from "./pages/Home"
+import Register from "./pages/Register"
 
 export default function App() {
   const dispatch = useAppDispatch()
@@ -28,10 +29,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route
-          path="/register"
-          element={<div className="p-8">Register page comes next</div>}
-        />
+        <Route path="/register" element={<Register />} />
         <Route
           path="/"
           element={user ? <Home /> : <Navigate to="/login" replace />}

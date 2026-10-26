@@ -120,3 +120,13 @@ body {
   background-size: 28px 28px;
   mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
 }
+
+:root[data-theme="dark"] select option {
+  background: #12152a;
+  color: #eef0ff;
+}
+
+:root[data-theme="light"] select option {
+  background: #ffffff;
+  color: #14163a;
+}
