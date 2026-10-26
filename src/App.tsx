@@ -8,6 +8,7 @@ import AdminLayout from "./layouts/AdminLayout"
 import PagePlaceholder from "./components/PagePlaceholder"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
+import StudentHome from "./pages/StudentHome"
 
 export default function App() {
   const dispatch = useAppDispatch()
@@ -36,12 +37,13 @@ export default function App() {
 
         <Route element={<RequireRole role="USER" />}>
           <Route element={<StudentLayout />}>
+            <Route path="/" element={<StudentHome />} />
             <Route
-              path="/"
+              path="/listings/:id"
               element={
                 <PagePlaceholder
-                  title="Home"
-                  description="Find your next book"
+                  title="Book details"
+                  description="Coming soon"
                 />
               }
             />
