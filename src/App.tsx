@@ -9,6 +9,7 @@ import PagePlaceholder from "./components/PagePlaceholder"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
 import StudentHome from "./pages/StudentHome"
+import Browse from "./pages/Browse"
 
 export default function App() {
   const dispatch = useAppDispatch()
@@ -47,15 +48,7 @@ export default function App() {
                 />
               }
             />
-            <Route
-              path="/browse"
-              element={
-                <PagePlaceholder
-                  title="Browse"
-                  description="Search all books"
-                />
-              }
-            />
+            <Route path="/browse" element={<Browse />} />
             <Route
               path="/sell"
               element={
