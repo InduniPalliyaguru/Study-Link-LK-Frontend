@@ -11,6 +11,7 @@ import Register from "./pages/Register"
 import StudentHome from "./pages/StudentHome"
 import Browse from "./pages/Browse"
 import ListingDetail from "./pages/ListingDetail"
+import Sell from "./pages/Sell"
 
 export default function App() {
   const dispatch = useAppDispatch()
@@ -42,15 +43,7 @@ export default function App() {
             <Route path="/" element={<StudentHome />} />
             <Route path="/listings/:id" element={<ListingDetail />} />
             <Route path="/browse" element={<Browse />} />
-            <Route
-              path="/sell"
-              element={
-                <PagePlaceholder
-                  title="Sell a book"
-                  description="List a book with AI help"
-                />
-              }
-            />
+            <Route path="/sell" element={<Sell />} />
             <Route
               path="/my-listings"
               element={
