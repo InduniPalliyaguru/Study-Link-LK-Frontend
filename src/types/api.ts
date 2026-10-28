@@ -91,3 +91,27 @@ export interface RequestInput {
   deliveryMethod: "meetup" | "courier"
   deliveryAddress?: string
 }
+
+export type ListingStatus =
+  | "pending"
+  | "available"
+  | "reserved"
+  | "sold"
+  | "rejected"
+  | "removed"
+
+export interface MyListing {
+  _id: string
+  title: string
+  description: string
+  price: number
+  condition: string
+  district: string
+  images: string[]
+  status: ListingStatus
+  rejectionReason?: string
+  deliveryOptions: "meetup" | "courier" | "both"
+  subject: { _id: string; name: string; colorKey: number }
+  gradeLevel: { _id: string; name: string }
+  createdAt: string
+}
