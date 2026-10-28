@@ -69,3 +69,25 @@ export interface ListingSummary {
   seller: { _id: string; name: string; district: string }
   createdAt: string
 }
+
+export interface ListingDetail extends ListingSummary {
+  description: string
+  status: "available" | "reserved" | "sold"
+  seller: { _id: string; name: string; district: string; createdAt: string }
+}
+
+export interface PublicProfile {
+  id: string
+  name: string
+  district: string
+  joinedAt: string
+  booksSold: number
+  rating: { average: number; count: number }
+}
+
+export interface RequestInput {
+  listing: string
+  message?: string
+  deliveryMethod: "meetup" | "courier"
+  deliveryAddress?: string
+}

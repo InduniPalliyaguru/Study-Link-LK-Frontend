@@ -10,6 +10,7 @@ import Login from "./pages/Login"
 import Register from "./pages/Register"
 import StudentHome from "./pages/StudentHome"
 import Browse from "./pages/Browse"
+import ListingDetail from "./pages/ListingDetail"
 
 export default function App() {
   const dispatch = useAppDispatch()
@@ -39,15 +40,7 @@ export default function App() {
         <Route element={<RequireRole role="USER" />}>
           <Route element={<StudentLayout />}>
             <Route path="/" element={<StudentHome />} />
-            <Route
-              path="/listings/:id"
-              element={
-                <PagePlaceholder
-                  title="Book details"
-                  description="Coming soon"
-                />
-              }
-            />
+            <Route path="/listings/:id" element={<ListingDetail />} />
             <Route path="/browse" element={<Browse />} />
             <Route
               path="/sell"

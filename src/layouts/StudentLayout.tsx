@@ -4,6 +4,8 @@ import { logoutUser } from "../features/auth/authSlice"
 import Logo from "../components/Logo"
 import ThemeToggle from "../components/ThemeToggle"
 import { navLinkClass } from "../utils/styles"
+import { useEffect } from "react"
+import { loadSavedIds } from "../features/saved/savedSlice"
 
 const links = [
   { to: "/", label: "Home", end: true },
@@ -17,6 +19,10 @@ const links = [
 export default function StudentLayout() {
   const dispatch = useAppDispatch()
   const user = useAppSelector((state) => state.auth.user)
+
+  useEffect(() => {
+    dispatch(loadSavedIds())
+  }, [dispatch])
 
   return (
     <div className="min-h-screen">

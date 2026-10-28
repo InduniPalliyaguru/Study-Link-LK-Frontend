@@ -2,6 +2,7 @@ import { Link } from "react-router-dom"
 import type { ListingSummary } from "../types/api"
 import { formatPrice } from "../utils/format"
 import BookCover from "./BookCover"
+import SaveButton from "./SaveButton"
 
 interface ListingCardProps {
   listing: ListingSummary
@@ -33,6 +34,10 @@ export default function ListingCard({ listing }: ListingCardProps) {
         <span className="absolute left-2.5 top-2.5 rounded-full bg-ok/20 px-2.5 py-0.5 text-[11px] font-bold text-ok backdrop-blur">
           {listing.condition}
         </span>
+        <SaveButton
+          listingId={listing._id}
+          className="absolute right-2.5 top-2.5"
+        />
       </div>
 
       <div className="p-3.5">

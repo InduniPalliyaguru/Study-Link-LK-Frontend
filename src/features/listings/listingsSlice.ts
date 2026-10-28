@@ -1,6 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { api } from "../../services/api"
-import type { ApiResponse, ListingSummary, Meta } from "../../types/api"
+import { getErrorMessage } from "../../utils/errors"
+import type {
+  ApiResponse,
+  ListingDetail,
+  ListingSummary,
+  Meta,
+} from "../../types/api"
 
 interface ListingsState {
   latest: ListingSummary[]
@@ -8,6 +14,9 @@ interface ListingsState {
   browse: ListingSummary[]
   browseMeta: Meta | null
   browseStatus: "idle" | "loading" | "failed"
+  current: ListingDetail | null
+  currentStatus: "idle" | "loading" | "failed"
+  currentError: string | null
 }
 
 const initialState: ListingsState = {
@@ -16,6 +25,9 @@ const initialState: ListingsState = {
   browse: [],
   browseMeta: null,
   browseStatus: "idle",
+  current: null,
+  currentStatus: "idle",
+  currentError: null,
 }
 
 export const fetchLatest = createAsyncThunk(
@@ -39,6 +51,21 @@ export const fetchBrowse = createAsyncThunk(
     return { items: response.data.data, meta: response.data.meta as Meta }
   },
 )
+
+export const fetchListing = createAsyncThunk<
+  ListingDetail,
+  string,
+  { rejectValue: string }
+>("listings/fetchListing", async (id, { rejectWithValue }) => {
+  try {
+    const response = await api.get<ApiResponse<ListingDetail>>(
+      `/listings/${id}`,
+    )
+    return response.data.data
+  } catch (error) {
+    return rejectWithValue(getErrorMessage(error))
+  }
+})
 
 const listingsSlice = createSlice({
   name: "listings",
@@ -66,6 +93,19 @@ const listingsSlice = createSlice({
       })
       .addCase(fetchBrowse.rejected, (state) => {
         state.browseStatus = "failed"
+      })
+      .addCase(fetchListing.pending, (state) => {
+        state.currentStatus = "loading"
+        state.currentError = null
+        state.current = null
+      })
+      .addCase(fetchListing.fulfilled, (state, action) => {
+        state.currentStatus = "idle"
+        state.current = action.payload
+      })
+      .addCase(fetchListing.rejected, (state, action) => {
+        state.currentStatus = "failed"
+        state.currentError = action.payload ?? "Could not load this book"
       })
   },
 })
