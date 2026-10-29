@@ -115,3 +115,41 @@ export interface MyListing {
   gradeLevel: { _id: string; name: string }
   createdAt: string
 }
+
+export type RequestStatus =
+  | "pending"
+  | "accepted"
+  | "rejected"
+  | "cancelled"
+  | "shipped"
+  | "completed"
+
+export interface Person {
+  _id?: string
+  name: string
+  district: string
+  phone?: string
+  email?: string
+}
+
+export interface RequestItem {
+  _id: string
+  listing: {
+    _id: string
+    title: string
+    price: number
+    images: string[]
+    status: string
+  } | null
+  buyer?: Person
+  seller?: Person
+  message?: string
+  deliveryMethod: "meetup" | "courier"
+  deliveryAddress?: string
+  status: RequestStatus
+  trackingNumber?: string
+  shippedAt?: string
+  handoverCodeExpires?: string
+  verified: boolean
+  createdAt: string
+}

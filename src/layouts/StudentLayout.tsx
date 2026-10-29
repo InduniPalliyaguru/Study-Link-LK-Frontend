@@ -1,11 +1,13 @@
-import { NavLink, Outlet } from "react-router-dom"
+import { NavLink, Outlet, useLocation } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../app/hooks"
 import { logoutUser } from "../features/auth/authSlice"
 import Logo from "../components/Logo"
 import ThemeToggle from "../components/ThemeToggle"
 import { navLinkClass } from "../utils/styles"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { loadSavedIds } from "../features/saved/savedSlice"
+import { api } from "../services/api"
+import type { ApiResponse, RequestItem } from "../types/api"
 
 const links = [
   { to: "/", label: "Home", end: true },
@@ -20,9 +22,24 @@ export default function StudentLayout() {
   const dispatch = useAppDispatch()
   const user = useAppSelector((state) => state.auth.user)
 
+  const location = useLocation()
+
   useEffect(() => {
     dispatch(loadSavedIds())
   }, [dispatch])
+
+  const [pendingRequests, setPendingRequests] = useState(0)
+
+  useEffect(() => {
+    api
+      .get<ApiResponse<RequestItem[]>>("/requests/received")
+      .then((response) =>
+        setPendingRequests(
+          response.data.data.filter((item) => item.status === "pending").length,
+        ),
+      )
+      .catch(() => setPendingRequests(0))
+  }, [location.pathname])
 
   return (
     <div className="min-h-screen">
@@ -38,6 +55,11 @@ export default function StudentLayout() {
               className={navLinkClass}
             >
               {link.label}
+              {link.to === "/requests" && pendingRequests > 0 && (
+                <span className="ml-1.5 rounded-full bg-accent px-1.5 py-0.5 text-[10px] font-extrabold text-black/80">
+                  {pendingRequests}
+                </span>
+              )}
             </NavLink>
           ))}
         </nav>

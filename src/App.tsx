@@ -13,6 +13,7 @@ import Browse from "./pages/Browse"
 import ListingDetail from "./pages/ListingDetail"
 import Sell from "./pages/Sell"
 import MyListings from "./pages/MyListings"
+import Requests from "./pages/Requests"
 
 export default function App() {
   const dispatch = useAppDispatch()
@@ -46,15 +47,7 @@ export default function App() {
             <Route path="/browse" element={<Browse />} />
             <Route path="/sell" element={<Sell />} />
             <Route path="/my-listings" element={<MyListings />} />
-            <Route
-              path="/requests"
-              element={
-                <PagePlaceholder
-                  title="Requests"
-                  description="Sent and received requests"
-                />
-              }
-            />
+            <Route path="/requests" element={<Requests />} />
             <Route
               path="/profile"
               element={
