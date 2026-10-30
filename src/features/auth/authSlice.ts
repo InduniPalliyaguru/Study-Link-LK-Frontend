@@ -1,9 +1,15 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import type { PayloadAction } from "@reduxjs/toolkit"
 import type { Dispatch } from "@reduxjs/toolkit"
 import { api } from "../../services/api"
 import { tokenStorage } from "../../services/tokenStorage"
 import { getErrorMessage } from "../../utils/errors"
-import type { ApiResponse, LoginData, RegisterInput, User } from "../../types/api"
+import type {
+  ApiResponse,
+  LoginData,
+  RegisterInput,
+  User,
+} from "../../types/api"
 
 interface AuthState {
   user: User | null
@@ -19,40 +25,48 @@ const initialState: AuthState = {
   initialized: false,
 }
 
-export const login = createAsyncThunk<User, { email: string; password: string }, { rejectValue: string }>(
-  "auth/login",
-  async (credentials, { rejectWithValue }) => {
-    try {
-      const response = await api.post<ApiResponse<LoginData>>("/auth/login", credentials)
-      const { accessToken, refreshToken, user } = response.data.data
+export const login = createAsyncThunk<
+  User,
+  { email: string; password: string },
+  { rejectValue: string }
+>("auth/login", async (credentials, { rejectWithValue }) => {
+  try {
+    const response = await api.post<ApiResponse<LoginData>>(
+      "/auth/login",
+      credentials,
+    )
+    const { accessToken, refreshToken, user } = response.data.data
 
-      tokenStorage.setTokens(accessToken, refreshToken)
-      return user
-    } catch (error) {
-      return rejectWithValue(getErrorMessage(error))
-    }
+    tokenStorage.setTokens(accessToken, refreshToken)
+    return user
+  } catch (error) {
+    return rejectWithValue(getErrorMessage(error))
   }
-)
-
-export const register = createAsyncThunk<void, RegisterInput, { rejectValue: string }>(
-  "auth/register",
-  async (input, { rejectWithValue }) => {
-    try {
-      await api.post("/auth/register", input)
-    } catch (error) {
-      return rejectWithValue(getErrorMessage(error))
-    }
-  }
-)
-
-export const loadSession = createAsyncThunk<User | null>("auth/loadSession", async () => {
-  if (!tokenStorage.getAccessToken()) {
-    return null
-  }
-
-  const response = await api.get<ApiResponse<User>>("/auth/me")
-  return response.data.data
 })
+
+export const register = createAsyncThunk<
+  void,
+  RegisterInput,
+  { rejectValue: string }
+>("auth/register", async (input, { rejectWithValue }) => {
+  try {
+    await api.post("/auth/register", input)
+  } catch (error) {
+    return rejectWithValue(getErrorMessage(error))
+  }
+})
+
+export const loadSession = createAsyncThunk<User | null>(
+  "auth/loadSession",
+  async () => {
+    if (!tokenStorage.getAccessToken()) {
+      return null
+    }
+
+    const response = await api.get<ApiResponse<User>>("/auth/me")
+    return response.data.data
+  },
+)
 
 const authSlice = createSlice({
   name: "auth",
@@ -64,6 +78,9 @@ const authSlice = createSlice({
     },
     clearError(state) {
       state.error = null
+    },
+    setUser(state, action: PayloadAction<User>) {
+      state.user = action.payload
     },
   },
   extraReducers: (builder) => {
@@ -102,7 +119,7 @@ const authSlice = createSlice({
   },
 })
 
-export const { clearSession, clearError } = authSlice.actions
+export const { clearSession, clearError, setUser } = authSlice.actions
 
 export const logoutUser = () => (dispatch: Dispatch) => {
   tokenStorage.clear()

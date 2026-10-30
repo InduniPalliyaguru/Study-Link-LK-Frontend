@@ -153,3 +153,17 @@ export interface RequestItem {
   verified: boolean
   createdAt: string
 }
+
+export interface ReviewItem {
+  _id: string
+  rating: number
+  comment?: string
+  verified: boolean
+  createdAt: string
+  reviewer: { name: string } | null
+}
+
+export interface ReviewsData {
+  reviews: ReviewItem[]
+  summary: { average: number; count: number }
+}
