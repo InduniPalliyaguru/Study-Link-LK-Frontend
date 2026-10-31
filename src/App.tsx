@@ -15,6 +15,7 @@ import Sell from "./pages/Sell"
 import MyListings from "./pages/MyListings"
 import Requests from "./pages/Requests"
 import Profile from "./pages/Profile"
+import Saved from "./pages/Saved"
 
 export default function App() {
   const dispatch = useAppDispatch()
@@ -49,6 +50,7 @@ export default function App() {
             <Route path="/sell" element={<Sell />} />
             <Route path="/my-listings" element={<MyListings />} />
             <Route path="/requests" element={<Requests />} />
+            <Route path="/saved" element={<Saved />} />
             <Route path="/profile" element={<Profile />} />
           </Route>
         </Route>

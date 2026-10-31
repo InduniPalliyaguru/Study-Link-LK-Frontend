@@ -15,6 +15,7 @@ const links = [
   { to: "/sell", label: "Sell", end: false },
   { to: "/my-listings", label: "My listings", end: false },
   { to: "/requests", label: "Requests", end: false },
+  { to: "/saved", label: "Saved", end: false },
   { to: "/profile", label: "Profile", end: false },
 ]
 
