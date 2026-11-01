@@ -18,6 +18,8 @@ import Profile from "./pages/Profile"
 import Saved from "./pages/Saved"
 import Dashboard from "./pages/admin/Dashboard"
 import AdminListings from "./pages/admin/Listings"
+import AdminUsers from "./pages/admin/Users"
+import AdminRequests from "./pages/admin/Requests"
 
 export default function App() {
   const dispatch = useAppDispatch()
@@ -61,21 +63,8 @@ export default function App() {
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="listings" element={<AdminListings />} />
-            <Route
-              path="requests"
-              element={
-                <PagePlaceholder
-                  title="Requests"
-                  description="Monitor requests"
-                />
-              }
-            />
-            <Route
-              path="users"
-              element={
-                <PagePlaceholder title="Users" description="Manage students" />
-              }
-            />
+            <Route path="requests" element={<AdminRequests />} />
+            <Route path="users" element={<AdminUsers />} />
             <Route
               path="subjects"
               element={

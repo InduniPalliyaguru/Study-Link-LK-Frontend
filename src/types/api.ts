@@ -192,3 +192,33 @@ export interface AdminListing {
   gradeLevel: { name: string }
   seller: { name: string; email: string; phone?: string; district: string }
 }
+
+export interface AdminUser {
+  _id: string
+  name: string
+  email: string
+  role: "USER" | "ADMIN"
+  phone?: string
+  district: string
+  institution?: string
+  educationLevel?: string
+  isBlocked: boolean
+  createdAt: string
+}
+
+export interface AdminRequest {
+  _id: string
+  listing: {
+    _id: string
+    title: string
+    images: string[]
+    status: string
+  } | null
+  buyer: { name: string; email: string; district: string } | null
+  seller: { name: string; email: string; district: string } | null
+  status: string
+  deliveryMethod: "meetup" | "courier"
+  trackingNumber?: string
+  verified: boolean
+  createdAt: string
+}
