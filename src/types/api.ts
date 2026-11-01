@@ -222,3 +222,12 @@ export interface AdminRequest {
   verified: boolean
   createdAt: string
 }
+
+export interface MeetupPoint {
+  _id: string
+  name: string
+  district: string
+  address?: string
+  description?: string
+  isActive: boolean
+}

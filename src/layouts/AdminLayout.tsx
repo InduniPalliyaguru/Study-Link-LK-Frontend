@@ -11,6 +11,7 @@ const links = [
   { to: "/admin/requests", label: "Requests", end: false },
   { to: "/admin/users", label: "Users", end: false },
   { to: "/admin/subjects", label: "Subjects", end: false },
+  { to: "/admin/meetup-points", label: "Meet-up points", end: false },
   { to: "/admin/reports", label: "Reports", end: false },
 ]
 

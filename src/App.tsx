@@ -20,6 +20,8 @@ import Dashboard from "./pages/admin/Dashboard"
 import AdminListings from "./pages/admin/Listings"
 import AdminUsers from "./pages/admin/Users"
 import AdminRequests from "./pages/admin/Requests"
+import AdminSubjects from "./pages/admin/Subjects"
+import AdminMeetupPoints from "./pages/admin/MeetupPoints"
 
 export default function App() {
   const dispatch = useAppDispatch()
@@ -65,15 +67,8 @@ export default function App() {
             <Route path="listings" element={<AdminListings />} />
             <Route path="requests" element={<AdminRequests />} />
             <Route path="users" element={<AdminUsers />} />
-            <Route
-              path="subjects"
-              element={
-                <PagePlaceholder
-                  title="Subjects and grades"
-                  description="Manage categories"
-                />
-              }
-            />
+            <Route path="subjects" element={<AdminSubjects />} />
+            <Route path="meetup-points" element={<AdminMeetupPoints />} />
             <Route
               path="reports"
               element={
