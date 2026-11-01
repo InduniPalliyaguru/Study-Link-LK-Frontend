@@ -17,6 +17,7 @@ import Requests from "./pages/Requests"
 import Profile from "./pages/Profile"
 import Saved from "./pages/Saved"
 import Dashboard from "./pages/admin/Dashboard"
+import AdminListings from "./pages/admin/Listings"
 
 export default function App() {
   const dispatch = useAppDispatch()
@@ -59,15 +60,7 @@ export default function App() {
         <Route element={<RequireRole role="ADMIN" />}>
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />
-            <Route
-              path="listings"
-              element={
-                <PagePlaceholder
-                  title="Listings"
-                  description="Review and approve listings"
-                />
-              }
-            />
+            <Route path="listings" element={<AdminListings />} />
             <Route
               path="requests"
               element={
