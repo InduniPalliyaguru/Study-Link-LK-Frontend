@@ -167,3 +167,28 @@ export interface ReviewsData {
   reviews: ReviewItem[]
   summary: { average: number; count: number }
 }
+
+export interface DashboardStats {
+  students: number
+  activeListings: number
+  pendingListings: number
+  booksSold: number
+  openReports: number
+  pendingRequests: number
+  completedRequests: number
+  bySubject: { name: string; colorKey: number; count: number }[]
+}
+
+export interface AdminListing {
+  _id: string
+  title: string
+  price: number
+  condition: string
+  district: string
+  images: string[]
+  status: string
+  createdAt: string
+  subject: { name: string; colorKey: number }
+  gradeLevel: { name: string }
+  seller: { name: string; email: string; phone?: string; district: string }
+}

@@ -16,6 +16,7 @@ import MyListings from "./pages/MyListings"
 import Requests from "./pages/Requests"
 import Profile from "./pages/Profile"
 import Saved from "./pages/Saved"
+import Dashboard from "./pages/admin/Dashboard"
 
 export default function App() {
   const dispatch = useAppDispatch()
@@ -57,15 +58,7 @@ export default function App() {
 
         <Route element={<RequireRole role="ADMIN" />}>
           <Route path="/admin" element={<AdminLayout />}>
-            <Route
-              index
-              element={
-                <PagePlaceholder
-                  title="Dashboard"
-                  description="Platform overview"
-                />
-              }
-            />
+            <Route index element={<Dashboard />} />
             <Route
               path="listings"
               element={
