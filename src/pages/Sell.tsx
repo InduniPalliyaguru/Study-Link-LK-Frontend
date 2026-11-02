@@ -8,6 +8,9 @@ import ImagePicker from "../components/ImagePicker"
 import { DISTRICTS } from "../utils/constants"
 import { getErrorMessage } from "../utils/errors"
 import { inputClass } from "../utils/styles"
+import type { ApiResponse, AssistResult } from "../types/api"
+import { formatPrice } from "../utils/format"
+import { typeText } from "../utils/typing"
 
 const emptyForm = {
   title: "",
@@ -38,6 +41,17 @@ export default function Sell() {
   const [error, setError] = useState("")
   const [sending, setSending] = useState(false)
   const [done, setDone] = useState(false)
+  const [notes, setNotes] = useState("")
+  const [assisting, setAssisting] = useState(false)
+  const [assist, setAssist] = useState<AssistResult | null>(null)
+  const [assistError, setAssistError] = useState("")
+  const [aiUsed, setAiUsed] = useState(false)
+
+  const canAssist =
+    form.title.trim().length >= 3 &&
+    !!form.subject &&
+    !!form.gradeLevel &&
+    !!form.condition
 
   useEffect(() => {
     if (!loaded) {
@@ -47,6 +61,49 @@ export default function Sell() {
 
   const update = (field: string, value: string | boolean) => {
     setForm((current) => ({ ...current, [field]: value }))
+  }
+
+  const runAssist = async () => {
+    setAssistError("")
+    setAssist(null)
+    setAssisting(true)
+
+    try {
+      const response = await api.post<ApiResponse<AssistResult>>(
+        "/ai/listing-assist",
+        {
+          name: form.title.trim(),
+          subject: form.subject,
+          gradeLevel: form.gradeLevel,
+          condition: form.condition,
+          notes: notes.trim() || undefined,
+        },
+      )
+
+      const result = response.data.data
+
+      setAssist(result)
+      setAiUsed(true)
+      setAssisting(false)
+
+      await typeText(result.title, (value) => update("title", value))
+      await typeText(result.description, (value) =>
+        update("description", value),
+      )
+    } catch (err) {
+      setAssistError(getErrorMessage(err))
+      setAssisting(false)
+    }
+  }
+
+  const usePrice = () => {
+    if (assist?.priceRange) {
+      const middle =
+        Math.round((assist.priceRange.min + assist.priceRange.max) / 2 / 50) *
+        50
+      update("isFree", false)
+      update("price", String(middle))
+    }
   }
 
   const handleSubmit = async (event: FormEvent) => {
@@ -67,6 +124,7 @@ export default function Sell() {
     body.append("subject", form.subject)
     body.append("gradeLevel", form.gradeLevel)
     body.append("deliveryOptions", form.deliveryOptions)
+    body.append("aiGenerated", aiUsed ? "true" : "false")
     files.forEach((file) => body.append("images", file))
 
     setSending(true)
@@ -86,6 +144,10 @@ export default function Sell() {
     setFiles([])
     setError("")
     setDone(false)
+    setNotes("")
+    setAssist(null)
+    setAssistError("")
+    setAiUsed(false)
   }
 
   if (done) {
@@ -305,17 +367,95 @@ export default function Sell() {
 
         <aside className="space-y-4">
           <div className="rounded-2xl border border-dashed border-brand-1 bg-brand-1/10 p-5">
-            <p className="font-display text-lg font-bold">✦ AI assistant</p>
-            <p className="mt-1 text-sm text-mute">
-              Soon it will write your title and description, and suggest a fair
-              price from the book details.
+            <p className="font-display text-lg font-bold">
+              <span className={assisting ? "inline-block animate-spin" : ""}>
+                ✦
+              </span>{" "}
+              AI assistant
             </p>
-            <button
-              disabled
-              className="mt-3 rounded-xl border border-line px-4 py-2 text-sm font-semibold opacity-60"
+            <p className="mt-1 text-sm text-mute">
+              Type the book name, then choose the subject, grade level and
+              condition. The AI writes the title and description and suggests a
+              fair price.
+            </p>
+
+            <label
+              htmlFor="notes"
+              className="mt-3 mb-1.5 block text-sm font-bold"
             >
-              Coming soon
+              Anything special? (optional)
+            </label>
+            <input
+              id="notes"
+              className={inputClass}
+              placeholder="Has my handwritten notes"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              maxLength={300}
+            />
+
+            <button
+              type="button"
+              onClick={runAssist}
+              disabled={!canAssist || assisting}
+              className="mt-3 w-full rounded-xl bg-linear-to-br from-brand-1 to-brand-2 py-2.5 font-bold text-white transition hover:-translate-y-0.5 active:scale-95 disabled:opacity-50"
+            >
+              {assisting
+                ? "Thinking..."
+                : assist
+                  ? "Generate again"
+                  : "Generate with AI"}
             </button>
+            {!canAssist && (
+              <p className="mt-2 text-xs text-mute">
+                Fill in the title, subject, grade level and condition first.
+              </p>
+            )}
+
+            {assistError && (
+              <p className="mt-2 text-sm text-bad" role="alert">
+                {assistError}
+              </p>
+            )}
+
+            {assist && (
+              <div
+                className="mt-3 rounded-xl bg-bg/60 p-3 text-sm"
+                role="status"
+              >
+                <p className="font-semibold">
+                  {assist.source === "ai"
+                    ? "✨ Written by AI. Please check it."
+                    : "AI is busy, so a simple template was used. Please edit it."}
+                </p>
+
+                {assist.priceRange ? (
+                  <>
+                    <p className="mt-2">
+                      Suggested price:{" "}
+                      <b>
+                        {formatPrice(assist.priceRange.min)} –{" "}
+                        {formatPrice(assist.priceRange.max)}
+                      </b>
+                    </p>
+                    <p className="text-xs text-mute">
+                      Based on {assist.basedOn} similar book(s) on StudyLink.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={usePrice}
+                      className="mt-2 rounded-lg border border-line px-3 py-1.5 text-xs font-semibold hover:bg-card"
+                    >
+                      Use this price
+                    </button>
+                  </>
+                ) : (
+                  <p className="mt-2 text-xs text-mute">
+                    No similar books yet, so please set your own price.
+                  </p>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="rounded-2xl border border-line bg-card p-5 text-sm text-mute">

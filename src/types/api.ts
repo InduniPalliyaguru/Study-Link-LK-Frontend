@@ -263,3 +263,11 @@ export interface AdminReport {
   reporter: { name: string } | null
   resolvedBy: { name: string } | null
 }
+
+export interface AssistResult {
+  title: string
+  description: string
+  priceRange: { min: number; max: number } | null
+  source: "ai" | "fallback"
+  basedOn: number
+}
