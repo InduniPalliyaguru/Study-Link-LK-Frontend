@@ -271,3 +271,9 @@ export interface AssistResult {
   source: "ai" | "fallback"
   basedOn: number
 }
+
+export interface CoverScanResult {
+  title: string
+  subject: string | null
+  gradeLevel: string | null
+}

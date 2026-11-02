@@ -8,7 +8,7 @@ import ImagePicker from "../components/ImagePicker"
 import { DISTRICTS } from "../utils/constants"
 import { getErrorMessage } from "../utils/errors"
 import { inputClass } from "../utils/styles"
-import type { ApiResponse, AssistResult } from "../types/api"
+import type { ApiResponse, AssistResult, CoverScanResult } from "../types/api"
 import { formatPrice } from "../utils/format"
 import { typeText } from "../utils/typing"
 
@@ -46,6 +46,8 @@ export default function Sell() {
   const [assist, setAssist] = useState<AssistResult | null>(null)
   const [assistError, setAssistError] = useState("")
   const [aiUsed, setAiUsed] = useState(false)
+  const [scanning, setScanning] = useState(false)
+  const [scanMessage, setScanMessage] = useState({ text: "", ok: true })
 
   const canAssist =
     form.title.trim().length >= 3 &&
@@ -93,6 +95,51 @@ export default function Sell() {
     } catch (err) {
       setAssistError(getErrorMessage(err))
       setAssisting(false)
+    }
+  }
+
+  const scanCover = async () => {
+    if (files.length === 0) {
+      return
+    }
+
+    setScanMessage({ text: "", ok: true })
+    setScanning(true)
+
+    try {
+      const body = new FormData()
+      body.append("image", files[0])
+
+      const response = await api.post<ApiResponse<CoverScanResult>>(
+        "/ai/scan-cover",
+        body,
+      )
+      const result = response.data.data
+
+      setAiUsed(true)
+      setScanning(false)
+
+      if (result.subject) update("subject", result.subject)
+      if (result.gradeLevel) update("gradeLevel", result.gradeLevel)
+      if (result.title) {
+        await typeText(result.title, (value) => update("title", value))
+      }
+
+      const found = [
+        result.title && "title",
+        result.subject && "subject",
+        result.gradeLevel && "grade level",
+      ].filter(Boolean)
+
+      setScanMessage({
+        text: found.length
+          ? `Found the ${found.join(", ")}. Please check them and choose the condition.`
+          : "I could not read much from this photo. Please fill in the details yourself.",
+        ok: found.length > 0,
+      })
+    } catch (err) {
+      setScanMessage({ text: getErrorMessage(err), ok: false })
+      setScanning(false)
     }
   }
 
@@ -148,6 +195,7 @@ export default function Sell() {
     setAssist(null)
     setAssistError("")
     setAiUsed(false)
+    setScanMessage({ text: "", ok: true })
   }
 
   if (done) {
@@ -378,6 +426,28 @@ export default function Sell() {
               condition. The AI writes the title and description and suggests a
               fair price.
             </p>
+
+            <button
+              type="button"
+              onClick={scanCover}
+              disabled={files.length === 0 || scanning}
+              className="mt-3 w-full rounded-xl border border-brand-1 py-2.5 font-bold transition hover:bg-brand-1/15 active:scale-95 disabled:opacity-50"
+            >
+              {scanning ? "Reading the cover..." : "📷 Scan the cover photo"}
+            </button>
+            {files.length === 0 && (
+              <p className="mt-1 text-xs text-mute">
+                Add a photo of the cover first, then scan it.
+              </p>
+            )}
+            {scanMessage.text && (
+              <p
+                className={`mt-2 text-sm ${scanMessage.ok ? "text-ok" : "text-bad"}`}
+                role={scanMessage.ok ? "status" : "alert"}
+              >
+                {scanMessage.text}
+              </p>
+            )}
 
             <label
               htmlFor="notes"
