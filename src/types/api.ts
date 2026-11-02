@@ -231,3 +231,35 @@ export interface MeetupPoint {
   description?: string
   isActive: boolean
 }
+
+export type ReportReason =
+  | "wrong_price"
+  | "wrong_subject"
+  | "spam"
+  | "inappropriate"
+  | "other"
+
+export interface AdminReport {
+  _id: string
+  reason: ReportReason
+  details?: string
+  status: "open" | "resolved" | "dismissed"
+  action?: "dismissed" | "listing_removed" | "seller_blocked"
+  createdAt: string
+  resolvedAt?: string
+  listing: {
+    _id: string
+    title: string
+    images: string[]
+    status: string
+    isDeleted: boolean
+    seller: {
+      name: string
+      email: string
+      district: string
+      isBlocked?: boolean
+    } | null
+  } | null
+  reporter: { name: string } | null
+  resolvedBy: { name: string } | null
+}

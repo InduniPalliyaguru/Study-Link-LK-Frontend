@@ -10,6 +10,7 @@ import { formatPrice } from "../utils/format"
 import { inputClass } from "../utils/styles"
 import BookCover from "../components/BookCover"
 import SaveButton from "../components/SaveButton"
+import ReportDialog from "../components/ReportDialog"
 
 const deliveryText = {
   meetup: "Meet-up only",
@@ -35,6 +36,7 @@ export default function ListingDetail() {
   const [method, setMethod] = useState<"meetup" | "courier">("meetup")
   const [address, setAddress] = useState("")
   const [sent, setSent] = useState(false)
+  const [reporting, setReporting] = useState(false)
 
   useEffect(() => {
     if (id) {
@@ -188,6 +190,21 @@ export default function ListingDetail() {
                 {deliveryText[listing.deliveryOptions]}
               </dd>
             </dl>
+            {!isOwner && (
+              <button
+                onClick={() => setReporting(true)}
+                className="mt-4 text-xs font-semibold text-mute underline-offset-2 hover:text-bad hover:underline"
+              >
+                🚩 Report this listing
+              </button>
+            )}
+            {reporting && (
+              <ReportDialog
+                listingId={listing._id}
+                title={listing.title}
+                onClose={() => setReporting(false)}
+              />
+            )}
           </div>
 
           <div className="rounded-2xl border border-line bg-card p-5">
