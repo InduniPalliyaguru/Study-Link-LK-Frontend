@@ -22,6 +22,7 @@ import AdminRequests from "./pages/admin/Requests"
 import AdminSubjects from "./pages/admin/Subjects"
 import AdminMeetupPoints from "./pages/admin/MeetupPoints"
 import AdminReports from "./pages/admin/Reports"
+import AdminAnalytics from "./pages/admin/Analytics"
 
 export default function App() {
   const dispatch = useAppDispatch()
@@ -64,6 +65,7 @@ export default function App() {
         <Route element={<RequireRole role="ADMIN" />}>
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />
+            <Route path="analytics" element={<AdminAnalytics />} />
             <Route path="listings" element={<AdminListings />} />
             <Route path="requests" element={<AdminRequests />} />
             <Route path="users" element={<AdminUsers />} />

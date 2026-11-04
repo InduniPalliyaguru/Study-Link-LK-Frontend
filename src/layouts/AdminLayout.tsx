@@ -7,6 +7,7 @@ import { navLinkClass } from "../utils/styles"
 
 const links = [
   { to: "/admin", label: "Dashboard", end: true },
+  { to: "/admin/analytics", label: "Analytics", end: false },
   { to: "/admin/listings", label: "Listings", end: false },
   { to: "/admin/requests", label: "Requests", end: false },
   { to: "/admin/users", label: "Users", end: false },

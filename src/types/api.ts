@@ -277,3 +277,18 @@ export interface CoverScanResult {
   subject: string | null
   gradeLevel: string | null
 }
+
+export interface AnalyticsData {
+  months: { label: string; listings: number; sold: number }[]
+  districts: { name: string; count: number }[]
+  subjects: { name: string; colorKey: number; supply: number; demand: number }[]
+  requestStatus: { status: string; count: number }[]
+  kpis: {
+    averagePrice: number
+    freeBooks: number
+    aiShare: number
+    verifiedShare: number
+    listingsTotal: number
+    completedTotal: number
+  }
+}

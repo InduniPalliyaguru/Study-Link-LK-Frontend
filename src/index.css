@@ -130,3 +130,15 @@ body {
   background: #ffffff;
   color: #14163a;
 }
+
+@keyframes grow-up {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+.bar-up {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: grow-up 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
