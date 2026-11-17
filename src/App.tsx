@@ -23,6 +23,8 @@ import AdminSubjects from "./pages/admin/Subjects"
 import AdminMeetupPoints from "./pages/admin/MeetupPoints"
 import AdminReports from "./pages/admin/Reports"
 import AdminAnalytics from "./pages/admin/Analytics"
+import ForgotPassword from "./pages/ForgotPassword"
+import ResetPassword from "./pages/ResetPassword"
 
 export default function App() {
   const dispatch = useAppDispatch()
@@ -48,6 +50,8 @@ export default function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
         <Route element={<RequireRole role="USER" />}>
           <Route element={<StudentLayout />}>

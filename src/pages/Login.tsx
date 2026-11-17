@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import type { FormEvent } from "react"
-import { Navigate, useLocation } from "react-router-dom"
+import { Link, Navigate, useLocation } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../app/hooks"
 import { clearError, login } from "../features/auth/authSlice"
 import AuthLayout from "../components/AuthLayout"
@@ -15,8 +15,12 @@ export default function Login() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
-  const justRegistered = (location.state as { registered?: boolean } | null)
-    ?.registered
+  const routeState = location.state as {
+    registered?: boolean
+    reset?: boolean
+  } | null
+  const justRegistered = routeState?.registered
+  const justReset = routeState?.reset
 
   useEffect(() => {
     dispatch(clearError())
@@ -47,6 +51,15 @@ export default function Login() {
           </p>
         )}
 
+        {justReset && (
+          <p
+            className="mb-2 rounded-xl bg-ok/15 px-4 py-2 text-sm font-semibold text-ok"
+            role="status"
+          >
+            Password changed. Log in with your new password.
+          </p>
+        )}
+
         <label htmlFor="email" className="mt-3 mb-1.5 block text-sm font-bold">
           Email
         </label>
@@ -73,6 +86,15 @@ export default function Login() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
+
+        <div className="mt-2 text-right">
+          <Link
+            to="/forgot-password"
+            className="text-sm font-semibold text-brand-2 hover:underline"
+          >
+            Forgot password?
+          </Link>
+        </div>
 
         <p className="mt-2 min-h-5 text-sm text-bad" role="alert">
           {error}

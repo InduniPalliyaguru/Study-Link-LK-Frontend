@@ -6,7 +6,7 @@ const baseURL = import.meta.env.VITE_API_BASE_URL
 
 export const api = axios.create({ baseURL })
 
-const PUBLIC_PATHS = ["/auth/login", "/auth/register", "/auth/refresh"]
+const PUBLIC_PATHS = ["/auth/login", "/auth/register", "/auth/refresh", "/auth/forgot-password", "/auth/reset-password"]
 
 const isPublic = (url?: string) =>
   PUBLIC_PATHS.some((path) => url?.includes(path))
