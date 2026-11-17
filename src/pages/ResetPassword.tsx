@@ -4,7 +4,6 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { api } from "../services/api"
 import AuthLayout from "../components/AuthLayout"
 import { getErrorMessage } from "../utils/errors"
-import { inputClass } from "../utils/styles"
 import PasswordInput from "../components/PasswordInput"
 
 export default function ResetPassword() {
