@@ -14,6 +14,7 @@ import { DISTRICTS, EDUCATION_LEVELS } from "../utils/constants"
 import { getErrorMessage } from "../utils/errors"
 import { formatDate } from "../utils/format"
 import { inputClass } from "../utils/styles"
+import PasswordInput from "../components/PasswordInput"
 
 const label = "mt-4 mb-1.5 block text-sm font-bold"
 const card = "rounded-2xl border border-line bg-card p-5 backdrop-blur md:p-6"
@@ -295,10 +296,9 @@ export default function Profile() {
             >
               Current password
             </label>
-            <input
+            <PasswordInput
               id="current"
-              type="password"
-              className={inputClass}
+              autoComplete="current-password"
               value={passwords.current}
               onChange={(e) =>
                 setPasswords((p) => ({ ...p, current: e.target.value }))
@@ -309,10 +309,9 @@ export default function Profile() {
             <label htmlFor="next" className={label}>
               New password
             </label>
-            <input
+            <PasswordInput
               id="next"
-              type="password"
-              className={inputClass}
+              autoComplete="new-password"
               value={passwords.next}
               onChange={(e) =>
                 setPasswords((p) => ({ ...p, next: e.target.value }))
@@ -323,10 +322,9 @@ export default function Profile() {
             <label htmlFor="confirm" className={label}>
               Confirm new password
             </label>
-            <input
+            <PasswordInput
               id="confirm"
-              type="password"
-              className={inputClass}
+              autoComplete="new-password"
               value={passwords.confirm}
               onChange={(e) =>
                 setPasswords((p) => ({ ...p, confirm: e.target.value }))

@@ -6,6 +6,7 @@ import { clearError, login } from "../features/auth/authSlice"
 import AuthLayout from "../components/AuthLayout"
 import { inputClass } from "../utils/styles"
 import { homeFor } from "../utils/roles"
+import PasswordInput from "../components/PasswordInput"
 
 export default function Login() {
   const dispatch = useAppDispatch()
@@ -78,10 +79,9 @@ export default function Login() {
         >
           Password
         </label>
-        <input
+        <PasswordInput
           id="password"
-          type="password"
-          className={inputClass}
+          autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required

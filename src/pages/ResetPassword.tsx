@@ -5,6 +5,7 @@ import { api } from "../services/api"
 import AuthLayout from "../components/AuthLayout"
 import { getErrorMessage } from "../utils/errors"
 import { inputClass } from "../utils/styles"
+import PasswordInput from "../components/PasswordInput"
 
 export default function ResetPassword() {
   const [params] = useSearchParams()
@@ -61,10 +62,9 @@ export default function ResetPassword() {
           <label htmlFor="password" className="mb-1.5 block text-sm font-bold">
             New password
           </label>
-          <input
+          <PasswordInput
             id="password"
-            type="password"
-            className={inputClass}
+            autoComplete="new-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -76,10 +76,9 @@ export default function ResetPassword() {
           >
             Confirm new password
           </label>
-          <input
+          <PasswordInput
             id="confirm"
-            type="password"
-            className={inputClass}
+            autoComplete="new-password"
             value={confirm}
             onChange={(e) => setConfirm(e.target.value)}
             required

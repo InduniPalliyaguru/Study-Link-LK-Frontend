@@ -7,6 +7,7 @@ import AuthLayout from "../components/AuthLayout"
 import { DISTRICTS, EDUCATION_LEVELS } from "../utils/constants"
 import { inputClass } from "../utils/styles"
 import { homeFor } from "../utils/roles"
+import PasswordInput from "../components/PasswordInput"
 
 export default function Register() {
   const dispatch = useAppDispatch()
@@ -154,10 +155,9 @@ export default function Register() {
             <label htmlFor="password" className={label}>
               Password
             </label>
-            <input
+            <PasswordInput
               id="password"
-              type="password"
-              className={inputClass}
+              autoComplete="new-password"
               value={form.password}
               onChange={(e) => update("password", e.target.value)}
               required
@@ -168,10 +168,9 @@ export default function Register() {
             <label htmlFor="confirm" className={label}>
               Confirm password
             </label>
-            <input
+            <PasswordInput
               id="confirm"
-              type="password"
-              className={inputClass}
+              autoComplete="new-password"
               value={form.confirmPassword}
               onChange={(e) => update("confirmPassword", e.target.value)}
               required
